@@ -21,4 +21,17 @@ router.post("/login", async (req, res) => {
   return res.json({ message: "login sussefully", token });
 });
 
+router.post("/verifyToken", async (req, res) => {
+  jwt.verify(req.body.token, process.env.SECRET_JWT,(err,decoded)=>{
+    if (err) {
+      return res.json({ message: "login sussefully", token });    
+    }else{
+      return res.json({decoded});
+    }
+  })
+  
+ 
+});
+
+
 module.exports = router;
