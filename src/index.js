@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require("dotenv").config(); //permite crear las variables de entorno
 const userRoutes = require("./routes/user"); //llamar al archivo de rutas
+const authRoutes = require("./routes/auth"); //llamar al archivo de rutas
 
 
 
@@ -13,6 +14,7 @@ const port = process.env.PORT || 9000;
 app.use(express.json());
 //3 middleware userRoutes la paso al middelware
 app.use('/api',userRoutes);
+app.use('/auth',authRoutes);
 
 
 
