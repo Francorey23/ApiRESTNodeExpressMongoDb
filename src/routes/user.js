@@ -1,21 +1,35 @@
 const express = require("express");
 const userSchema = require("../models/users");
-
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
 //A. Crear un Usuario
 //creacion de las rutas
-router.post('/users', (req, res)=>{
+router.post('/users', async (req, res)=>{
+  /* const newuser = new userSchema(req.body)
+  return res.json(newuser.password) */
+  try {
     //1 res.send("create user");
+    const newuser = new userSchema(req.body)
+    await newuser.validate();
+    const hashedpassword = await bcrypt.hash(newuser.password, 10)
 
-    const user = userSchema(req.body);
+    const user = await newuser.save({
+      ...newuser,
+      password: hashedpassword
+    })
+    res.json(user)
     //creo la variable user.. ella retorna una promesa y le digo
-    user
-    .save()
-    .then((data) => res.json(data))
-    .catch((error) => res.json({message: error}));
+  } catch (error) {
+    res.status(400).json(error)
+  }
+    
+   
 });//para que funcione las debemos llamar en el archivo y la ruta del servidor
+
+
+
 
 //B. Recuperar todos los usuarios
      //creacion de las rutas
