@@ -8,13 +8,18 @@ const router = express.Router();
 //creacion de las rutas
 router.post("/users", async (req, res) => {
   try {
+    // inicializamos el validate para el request si no estan todos los campos del modelo da un error 
     await userSchema.validate(req.body);
+    // encriptamos la contraseña que enviamo en el body de la peticion 
     const hashedpassword = await bcrypt.hash(req.body.password, 10);
+    //creamos una instancia del modelo de la base de datos para primero poder agregar los valores necesarios 
     const newuser = new userSchema({ ...req.body, password: hashedpassword });
+    // guardamos en la base de datos todos los campos por medio de la instacion de la linea 16
     const user = await newuser.save();
+    // respuesta de la api 
     res.json(user);
-    //creo la variable user.. ella retorna una promesa y le digo
   } catch (error) {
+    //si te nemos un error ya sea en el guardado de la linea 18 o el calidated de la linea 12
     res.status(400).json(error);
   }
 }); //para que funcione las debemos llamar en el archivo y la ruta del servidor
