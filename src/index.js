@@ -21,6 +21,7 @@ app.get("/", (req, res) => {
 //2. conexion a mongo El metodo me retorna una promesa puedo verificar la conexion
 
 mongoose
+
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("Conectando a MongoDB Atlas"))
   .catch((error) => console.error(error)); //verificar la conexión del servidor

@@ -20,7 +20,8 @@ router.post("/users", async (req, res) => {
     res.json(user);
   } catch (error) {
     //si te nemos un error ya sea en el guardado de la linea 18 o el calidated de la linea 12
-    res.status(400).json(error);
+    console.log(error);
+    res.status(500).json(error);
   }
 }); //para que funcione las debemos llamar en el archivo y la ruta del servidor
 

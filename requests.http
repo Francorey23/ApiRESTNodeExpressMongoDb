@@ -8,7 +8,8 @@ Content-Type: application/json
 {
   "name": "Maria Camila Peña",
   "age": 45,
-  "email": "mariapena@email.com"
+  "email": "mariapena@email.com",
+  "password": "123"
 }
 
 //consultar todos los usuarios
