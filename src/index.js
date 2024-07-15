@@ -9,7 +9,8 @@ const port = process.env.PORT || 9000;
 
 //para convertir a un tipo de datos al enviar la peticion POST 1
 app.use(express.json());
-//3 middleware userRoutes la paso al middelware
+//3 userRoutes la paso al middelware
+//aplicaciones web, para referirse a las funciones que tienen acceso al objeto de solicitud
 app.use("/api", userRoutes);
 app.use("/auth", authRoutes);
 
