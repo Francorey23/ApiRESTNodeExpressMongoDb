@@ -15,7 +15,7 @@ router.post("/users", async (req, res) => {
     //creamos una instancia del modelo de la base de datos para primero poder agregar los valores necesarios 
     const newuser = new userSchema({ ...req.body, password: hashedpassword });
     // guardamos en la base de datos todos los campos por medio de la instacion de la linea 16
-    const user = await newuser.save();
+    const user = await newuser.save( );
     // respuesta de la api 
     res.json(user);
   } catch (error) {
@@ -47,7 +47,7 @@ router.get("/users/:id", (req, res) => {
 router.delete("/users/:id", (req, res) => {
   const { id } = req.params;
   userSchema
-    .remove({ _id: id })
+    .findByIdAndDelete({ _id: id })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
