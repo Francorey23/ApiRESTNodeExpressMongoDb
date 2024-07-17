@@ -17,7 +17,7 @@ router.post("/users", async (req, res) => {
     // guardamos en la base de datos todos los campos por medio de la instacion de la linea 16
     const user = await newuser.save( );
     // respuesta de la api 
-    res.json(user);
+    res.status(201).json(user);
   } catch (error) {
     //si te nemos un error ya sea en el guardado de la linea 18 o el calidated de la linea 12
     console.log(error);
