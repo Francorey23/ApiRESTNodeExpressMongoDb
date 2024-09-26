@@ -1,66 +1,51 @@
 const express = require("express");
 const userSchema = require("../models/users");
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
+const path = require("path");
 
 const router = express.Router();
 
-//A. Crear un Usuario
-//creacion de las rutas
-router.post("/users", async (req, res) => {
-  try {
-    // inicializamos el validate para el request si no estan todos los campos del modelo da un error 
-    await userSchema.validate(req.body);
-    // encriptamos la contraseña que enviamo en el body de la peticion 
-    const hashedpassword = await bcrypt.hash(req.body.password, 10);
-    //creamos una instancia del modelo de la base de datos para primero poder agregar los valores necesarios 
-    const newuser = new userSchema({ ...req.body, password: hashedpassword });
-    // guardamos en la base de datos todos los campos por medio de la instacion de la linea 16
-    const user = await newuser.save( );
-    // respuesta de la api 
-    res.status(201).json(user);
-  } catch (error) {
-    //si te nemos un error ya sea en el guardado de la linea 18 o el calidated de la linea 12
-    console.log(error);
-    res.status(500).json(error);
+// Configuración de Multer para almacenar las imágenes en la carpeta /uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');  // Ruta donde se almacenarán las imágenes
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));  // Genera un nombre único para la imagen
   }
-}); //para que funcione las debemos llamar en el archivo y la ruta del servidor
-
-//B. Recuperar todos los usuarios
-//creacion de las rutas
-router.get("/users", (req, res) => {
-  userSchema
-    .find()
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
 });
 
-// C. Obtener un usuario especifio
-router.get("/users/:id", (req, res) => {
-  const { id } = req.params;
-  userSchema
-    .findById(id)
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+const upload = multer({ storage: storage });
+
+// Ruta para crear un usuario con una imagen
+router.post('/users', upload.single('image'), async (req, res) => {
+  try {
+    // Verifica que haya un archivo cargado
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se ha cargado ninguna imagen' });
+    }
+
+    // Hasheamos la contraseña del usuario
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    // Crear un nuevo usuario con los datos recibidos
+    const newUser = new userSchema({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+      imageUrl: req.file.path // Guarda la ruta del archivo en la base de datos
+    });
+
+    // Guardar el nuevo usuario en la base de datos
+    const user = await newUser.save();
+    res.status(201).json(user); // Respuesta al cliente
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear el usuario' });
+  }
 });
 
-// delete a user
-router.delete("/users/:id", (req, res) => {
-  const { id } = req.params;
-  userSchema
-    .findByIdAndDelete({ _id: id })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-});
 
-// update a user
-router.put("/users/:id", (req, res) => {
-  const { id } = req.params;
-  const { name, age, email } = req.body;
-  userSchema
-    .updateOne({ _id: id }, { $set: { name, age, email } })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-});
-
-//exportar router
 module.exports = router;
