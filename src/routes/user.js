@@ -35,7 +35,9 @@ router.post('/users', upload.single('image'), async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
-      imageUrl: req.file.path // Guarda la ruta del archivo en la base de datos
+      //imageUrl: req.file.path // Guarda la ruta del archivo en la base de datos** cambio
+      imageUrl: req.file.filename // Guarda solo el nombre del archivo en la base de datos
+
     });
 
     // Guardar el nuevo usuario en la base de datos
