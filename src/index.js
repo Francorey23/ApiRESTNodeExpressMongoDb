@@ -13,9 +13,6 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 9000;
 // Configurar la carpeta estática para servir las imágenes
-//app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); cambio
-//
-// Configurar la carpeta estática para servir las imágenes
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 
