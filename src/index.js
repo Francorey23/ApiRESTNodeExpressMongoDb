@@ -6,14 +6,25 @@ const authRoutes = require("./routes/auth"); //llamar al archivo de rutas
 const categoriaRoutes = require("./routes/categorias"); 
 const productoRoutes = require("./routes/productos");
 const consultasRoutes = require("./routes/consultas"); 
+//
 
 //
 const path = require('path');
-
 const app = express();
 const port = process.env.PORT || 9000;
 // Configurar la carpeta estática para servir las imágenes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+//
+app.get("/api/users", async (req, res) => {
+  const users = await User.find(); // Supongamos que estás obteniendo usuarios de la base de datos
+  const usersWithImages = users.map(user => ({
+    name: user.name,
+    email: user.email,
+    imageUrl: user.imageUrl // Solo debe incluir el nombre del archivo
+  }));
+  res.json(usersWithImages);
+});
 
 // Otras rutas y configuraciones de tu app
 //app.use('/uploads', express.static('uploads'));
