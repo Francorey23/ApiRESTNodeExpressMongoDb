@@ -7,10 +7,16 @@ const categoriaRoutes = require("./routes/categorias");
 const productoRoutes = require("./routes/productos");
 const consultasRoutes = require("./routes/consultas"); 
 
+//
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 9000;
-app.use('/uploads', express.static('uploads'));
+// Configurar la carpeta estática para servir las imágenes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Otras rutas y configuraciones de tu app
+//app.use('/uploads', express.static('uploads'));
 
 
 //para convertir a un tipo de datos al enviar la peticion POST 1
